@@ -1,10 +1,23 @@
 from pathlib import Path
 
 FOLDER_FOR_FILE_TYPE = {
-    "Texto": (".txt"),
-    "Audio": (".mp3"),
-    "Video": (".mp4"),
-    "Imagem": (".png", ".jpg")
+    "Texto": (".txt", ".md", ".csv", ".log", ".json", ".xml", ".yaml", ".yml", ".ini"),
+    
+    "Audio": (".mp3", ".wav", ".flac", ".aac", ".ogg", ".wma", ".m4a", ".aiff"),
+    
+    "Video": (".mp4", ".mkv", ".avi", ".mov", ".wmv", ".flv", ".webm", ".mpeg", ".mpg"),
+    
+    "Imagem": (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".webp", ".svg", ".ico"),
+    
+    "Documento": (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".odt", ".ods", ".odp"),
+    
+    "Compactado": (".zip", ".rar", ".7z", ".tar", ".gz", ".bz2", ".xz", ".iso"),
+    
+    "Codigo": (".py", ".java", ".c", ".cpp", ".js", ".ts", ".html", ".css", ".php", ".rb", ".go", ".rs", ".swift"),
+    
+    "Executavel": (".exe", ".msi", ".bat", ".sh", ".app", ".jar", ".bin", ".cmd"),
+    
+    "Outros": (".dat", ".bak", ".tmp")
 }
 
 def get_unique_file_name(destination_folder, original_name):
