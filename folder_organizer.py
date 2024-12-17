@@ -8,7 +8,6 @@ FOLDER_FOR_FILE_TYPE = {
 }
 
 def get_unique_file_name(destination_folder, original_name):
-    original_name = Path(original_name)
     stem = original_name.stem
     suffix = original_name.suffix
     new_name = original_name.name
@@ -28,7 +27,7 @@ for file in files:
     file_type = None
 
     for folder, extensions in FOLDER_FOR_FILE_TYPE.items():
-        if file_extension in extensions:
+        if file_extension.lower() in extensions:
             file_type = folder
             break
     
@@ -39,7 +38,7 @@ for file in files:
         new_path = destination_folder / file.name
 
         if new_path.exists():
-            unique_name = get_unique_file_name(destination_folder, file.name)
+            unique_name = get_unique_file_name(destination_folder, file)
             new_path = destination_folder / unique_name
 
         file.rename(new_path)
