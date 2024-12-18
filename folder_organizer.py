@@ -62,13 +62,20 @@ def csv_to_dict():
         with open(DATA_PATH, "r", newline="", encoding="utf-8") as csv_file:
             reader = csv.DictReader(csv_file)
             for row in reader:
-                extension = row[EXTENSION_FIELDNAME].strip()
+                extension = row[EXTENSION_FIELDNAME].strip().lower()
                 file_type = row[FILE_TYPE_FIELDNAME].strip()
                 if extension and file_type:
                     file_type_dict[extension] = file_type
     except:
         print("Erro com o arquivo CSV. O arquivo será sobreescrito com os dados padrões.")
         dict_to_csv()
+        with open(DATA_PATH, "r", newline="", encoding="utf-8") as csv_file:
+            reader = csv.DictReader(csv_file)
+            for row in reader:
+                extension = row[EXTENSION_FIELDNAME].strip().lower()
+                file_type = row[FILE_TYPE_FIELDNAME].strip()
+                if extension and file_type:
+                    file_type_dict[extension] = file_type
     return file_type_dict
 
 def organize_folder():
@@ -106,8 +113,5 @@ def organize_folder():
                     print(f"Sem permissão para mover o arquivo {file}.")
                 except Exception as e:
                     print(f"Ocorreu um erro ao tentar mover o arquivo {file}: {e}")
-
-if not DATA_PATH.exists() or DATA_PATH.stat().st_size == 0:
-    dict_to_csv()
 
 organize_folder()
