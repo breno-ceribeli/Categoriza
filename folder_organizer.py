@@ -1,23 +1,32 @@
 from pathlib import Path
 
-FOLDER_FOR_FILE_TYPE = {
-    "Texto": (".txt", ".md", ".csv", ".log", ".json", ".xml", ".yaml", ".yml", ".ini"),
+EXTENSION_TO_TYPE = {
+    ".txt": "Texto", ".md": "Texto", ".csv": "Texto", ".log": "Texto",
+    ".json": "Texto", ".xml": "Texto", ".yaml": "Texto", ".yml": "Texto", ".ini": "Texto",
     
-    "Audio": (".mp3", ".wav", ".flac", ".aac", ".ogg", ".wma", ".m4a", ".aiff"),
+    ".mp3": "Audio", ".wav": "Audio", ".flac": "Audio", ".aac": "Audio",
+    ".ogg": "Audio", ".wma": "Audio", ".m4a": "Audio", ".aiff": "Audio",
     
-    "Video": (".mp4", ".mkv", ".avi", ".mov", ".wmv", ".flv", ".webm", ".mpeg", ".mpg"),
+    ".mp4": "Video", ".mkv": "Video", ".avi": "Video", ".mov": "Video",
+    ".wmv": "Video", ".flv": "Video", ".webm": "Video", ".mpeg": "Video", ".mpg": "Video",
     
-    "Imagem": (".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tiff", ".webp", ".svg", ".ico"),
+    ".png": "Imagem", ".jpg": "Imagem", ".jpeg": "Imagem", ".gif": "Imagem",
+    ".bmp": "Imagem", ".tiff": "Imagem", ".webp": "Imagem", ".svg": "Imagem", ".ico": "Imagem",
     
-    "Documento": (".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx", ".odt", ".ods", ".odp"),
+    ".pdf": "Documento", ".doc": "Documento", ".docx": "Documento",
+    ".xls": "Documento", ".xlsx": "Documento", ".ppt": "Documento", ".pptx": "Documento",
+    ".odt": "Documento", ".ods": "Documento", ".odp": "Documento",
     
-    "Compactado": (".zip", ".rar", ".7z", ".tar", ".gz", ".bz2", ".xz", ".iso"),
+    ".zip": "Compactado", ".rar": "Compactado", ".7z": "Compactado", ".tar": "Compactado",
+    ".gz": "Compactado", ".bz2": "Compactado", ".xz": "Compactado", ".iso": "Compactado",
     
-    "Codigo": (".py", ".java", ".c", ".cpp", ".js", ".ts", ".html", ".css", ".php", ".rb", ".go", ".rs", ".swift"),
+    ".py": "Codigo", ".java": "Codigo", ".c": "Codigo", ".cpp": "Codigo",
+    ".js": "Codigo", ".ts": "Codigo", ".html": "Codigo", ".css": "Codigo",
+    ".php": "Codigo", ".rb": "Codigo", ".go": "Codigo", ".rs": "Codigo", ".swift": "Codigo",
     
-    "Executavel": (".exe", ".msi", ".bat", ".sh", ".app", ".jar", ".bin", ".cmd"),
-    
-    "Outros": (".dat", ".bak", ".tmp")
+    ".exe": "Executavel", ".msi": "Executavel", ".bat": "Executavel",
+    ".sh": "Executavel", ".app": "Executavel", ".jar": "Executavel",
+    ".bin": "Executavel", ".cmd": "Executavel",
 }
 
 def get_unique_file_name(destination_folder, original_name):
@@ -37,12 +46,7 @@ files = [file for file in path.iterdir() if file.is_file()]
 
 for file in files:
     file_extension = file.suffix
-    file_type = None
-
-    for folder, extensions in FOLDER_FOR_FILE_TYPE.items():
-        if file_extension.lower() in extensions:
-            file_type = folder
-            break
+    file_type = EXTENSION_TO_TYPE.get(file_extension.lower(), "Outros")
     
     if file_type:
         destination_folder = path / file_type
