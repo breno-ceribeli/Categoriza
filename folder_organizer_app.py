@@ -19,7 +19,9 @@ ICO_IMAGE = "images/empty.ico"
 FOLDER_ICON = "images/folder_icon.png"
 FOLDER_ICON_HOVER = "images/folder_icon_hover.png"
 
+
 class App(ctk.CTk):
+
     def __init__(self):
         super().__init__(fg_color=BACKGROUND_COLOR)
         self.title("")
@@ -34,9 +36,15 @@ class App(ctk.CTk):
         self.change_title_bar_color()
 
         self.entry_font = ctk.CTkFont(family="Dubai", size=14)
+        self.buttons_font = "Tahoma"
 
-        path_frame = PathFrame(self, self.entry_font)
-        path_frame.place(relx=0.5, rely=0.55, anchor="center")
+        self.folder_path = ctk.StringVar()
+
+        path_frame = PathFrame(self, self.entry_font, self.folder_path)
+        path_frame.place(relx=0.5, rely=0.52, anchor="center")
+
+        buttons_frame = ButtonsFrame(self, self.buttons_font, self.folder_path)
+        buttons_frame.place(relx=0.5, rely=0.59, relheight=0.36, anchor="n")
 
         self.mainloop()
     
@@ -49,8 +57,10 @@ class App(ctk.CTk):
         except:
             pass
 
+
 class PathFrame(ctk.CTkFrame):
-    def __init__(self, parent, font):
+
+    def __init__(self, parent, font, folder_path):
         super().__init__(
             master=parent,
             fg_color=SECONDARY_COLOR,
@@ -59,7 +69,7 @@ class PathFrame(ctk.CTkFrame):
             height=35
         )
 
-        self.folder_path = ctk.StringVar()
+        self.folder_path = folder_path
 
         self.path_entry = ctk.CTkEntry(
             master=self,
@@ -78,28 +88,28 @@ class PathFrame(ctk.CTkFrame):
         self.normal_image = ctk.CTkImage(
             light_image=Image.open(FOLDER_ICON),
             dark_image=Image.open(FOLDER_ICON),
-            size=(14, 14)
+            size=(16, 16)
         )
         
         self.hover_image = ctk.CTkImage(
             light_image=Image.open(FOLDER_ICON_HOVER),
             dark_image=Image.open(FOLDER_ICON_HOVER),
-            size=(14, 14)
+            size=(16, 16)
         )
 
         self.folder_icon = ctk.CTkLabel(
             master=self,
             text="",
             image=self.normal_image,
-            width=16,
-            height=16,
+            width=18,
+            height=18,
             fg_color=SECONDARY_COLOR,
             cursor="hand2"
         )
         self.folder_icon.place(relx=0.95, rely=0.5, anchor="e")
         
         self.folder_icon.bind("<Button-1>", self.open_folder)
-        self.folder_icon.bind("<Enter>", self.on_enter)
+        self.folder_icon.bind("<Enter>", self.on_hover)
         self.folder_icon.bind("<Leave>", self.on_leave)
 
     def open_folder(self, event):
@@ -107,10 +117,67 @@ class PathFrame(ctk.CTkFrame):
         if folder_selected:
             self.folder_path.set(folder_selected)
         
-    def on_enter(self, event):
+    def on_hover(self, event):
         self.folder_icon.configure(image=self.hover_image)
         
     def on_leave(self, event):
         self.folder_icon.configure(image=self.normal_image)
+
+
+class ButtonsFrame(ctk.CTkFrame):
+
+    def __init__(self, parent, font, folder_path):
+        super().__init__(
+            master=parent,
+            fg_color=BACKGROUND_COLOR,
+        )
+
+        self.folder_path = folder_path
+        
+        self.organize_button = ctk.CTkButton(
+            master=self,
+            text="Organizar",
+            font=(font, 25, "bold"),
+            text_color=TEXT_COLOR,
+            width=200,
+            height=57,
+            fg_color=SECONDARY_COLOR,
+            hover_color=CONTRAST_COLOR,
+            corner_radius=10,
+            command=self.organize_folder
+        )
+        self.organize_button.pack(expand=True)
+
+        self.config_button = ctk.CTkButton(
+            master=self,
+            text="Configurações",
+            font=(font, 18, "bold"),
+            text_color=TEXT_COLOR,
+            width=170,
+            height=48,
+            fg_color=SECONDARY_COLOR,
+            hover_color=CONTRAST_COLOR,
+            corner_radius=10,
+            command=self.app_config
+        )
+        self.config_button.pack(expand=True)
+
+        self.buttons = (self.organize_button, self.config_button)
+
+        for button in self.buttons:
+            button.bind("<Enter>", lambda e, btn=button: self.on_hover(btn))
+            button.bind("<Leave>", lambda e, btn=button: self.on_leave(btn))
+
+    def organize_folder(self):
+        print("Organizado")
+    
+    def app_config(self):
+        print("Abrindo configurações")
+    
+    def on_hover(self, button):
+        button.configure(text_color=SECONDARY_COLOR, fg_color=CONTRAST_COLOR)
+    
+    def on_leave(self, button):
+        button.configure(text_color=TEXT_COLOR, fg_color=SECONDARY_COLOR)
 
 App()
