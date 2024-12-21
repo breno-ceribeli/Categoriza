@@ -1,6 +1,5 @@
 from pathlib import Path
 import csv
-from typing import Dict, Optional, Tuple, List
 
 DEFAULT_EXTENSION_TO_TYPE = {
     ".txt": "Texto", ".md": "Texto", ".csv": "Texto", ".log": "Texto",
@@ -46,7 +45,7 @@ class FileOrganizer:
 
     Attributes:
         file_type_dict (Dict[str, str]): A dictionary mapping file extensions to file types.
-        csv_error (Optional[str]): An error message if there was an issue with the CSV file.
+        csv_error (str | None): An error message if there was an issue with the CSV file.
 
     Methods:
         get_unique_file_name: Generate a unique file name to avoid conflicts.
@@ -79,12 +78,12 @@ class FileOrganizer:
             counter += 1
         return new_name
 
-    def dict_to_csv(self) -> Optional[str]:
+    def dict_to_csv(self) -> str | None:
         """
         Save the extension dictionary to the CSV file.
         
         Returns:
-            Optional[str]: Error message if there's an error, None otherwise
+            str | None: Error message if there's an error, None otherwise
         """
         try:
             with open(DATA_PATH, "w", newline="", encoding="utf-8") as csv_file:
@@ -97,12 +96,14 @@ class FileOrganizer:
         except Exception as e:
             return f"Ocorreu um erro ao tentar escrever no arquivo CSV: {e}\nO arquivo padrão será utilizado."
 
-    def csv_to_dict(self) -> Tuple[Dict[str, str], Optional[str]]:
+    def csv_to_dict(self) -> tuple[dict[str, str], str | None]:
         """
         Read the extension dictionary from the CSV file.
-        
+    
         Returns:
-            Tuple[Dict[str, str], Optional[str]]: (dictionary of types, error message if any)
+            tuple[dict[str, str], str | None]: A tuple containing:
+                - dict[str, str]: Dictionary mapping file extensions to file types.
+                - str | None: Error message if any, None otherwise.
         """
         file_type_dict = {}
         error_msg = None
@@ -127,7 +128,7 @@ class FileOrganizer:
                         
         return file_type_dict, error_msg
 
-    def organize_folder(self, directory_path: str) -> Tuple[bool, str | List[str]]:
+    def organize_folder(self, directory_path: str) -> tuple[bool, str | list[str]]:
         """
         Organize files in the specified directory.
         
@@ -135,8 +136,7 @@ class FileOrganizer:
             directory_path (str): Path of the directory to be organized
         
         Returns:
-        Tuple[bool, str | List[str]]: 
-            A tuple containing:
+        Tuple[bool, str | List[str]]: A tuple containing:
                 - A boolean indicating the success of the operation.
                 - A single error message or a list of error messages.
         """
