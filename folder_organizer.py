@@ -1,5 +1,6 @@
 from pathlib import Path
 import csv
+from typing import Dict, Optional, Tuple, List
 
 DEFAULT_EXTENSION_TO_TYPE = {
     ".txt": "Texto", ".md": "Texto", ".csv": "Texto", ".log": "Texto",
@@ -34,68 +35,124 @@ DATA_PATH = Path("data.csv")
 EXTENSION_FIELDNAME = "Extensão do arquivo"
 FILE_TYPE_FIELDNAME = "Tipo de arquivo"
 
-def get_unique_file_name(destination_folder, original_name):
-    stem = original_name.stem
-    suffix = original_name.suffix
-    new_name = original_name.name
-    counter = 1
+class FileOrganizer:
+    """
+    A class for organizing files in a directory based on their file extensions.
 
-    while (destination_folder / new_name).exists():
-        new_name = f"{stem}({counter}){suffix}"
-        counter += 1
-    return new_name
+    This class provides functionality to:
+    1. Read file extension mappings from a CSV file or use default mappings.
+    2. Organize files in a specified directory into subdirectories based on their types.
+    3. Handle file naming conflicts by creating unique file names.
 
-def dict_to_csv():
-    try:
-        with open("data.csv", "w", newline="", encoding="utf-8") as csv_file:
-            writer = csv.writer(csv_file)
-            writer.writerow([EXTENSION_FIELDNAME, FILE_TYPE_FIELDNAME])
-            writer.writerows(DEFAULT_EXTENSION_TO_TYPE.items())
-    except PermissionError:
-        print("Permissão negada para escrever no arquivo CSV.")
-    except Exception as e:
-        print(f"Ocorreu um erro ao tentar escrever no arquivo CSV: {e}")
+    Attributes:
+        file_type_dict (Dict[str, str]): A dictionary mapping file extensions to file types.
+        csv_error (Optional[str]): An error message if there was an issue with the CSV file.
 
-def csv_to_dict():
-    file_type_dict = {}
-    try:
-        with open(DATA_PATH, "r", newline="", encoding="utf-8") as csv_file:
-            reader = csv.DictReader(csv_file)
-            for row in reader:
-                extension = row[EXTENSION_FIELDNAME].strip().lower()
-                file_type = row[FILE_TYPE_FIELDNAME].strip()
-                if extension and file_type:
-                    file_type_dict[extension] = file_type
-    except:
-        print("Erro com o arquivo CSV. O arquivo será sobreescrito com os dados padrões.")
-        dict_to_csv()
-        with open(DATA_PATH, "r", newline="", encoding="utf-8") as csv_file:
-            reader = csv.DictReader(csv_file)
-            for row in reader:
-                extension = row[EXTENSION_FIELDNAME].strip().lower()
-                file_type = row[FILE_TYPE_FIELDNAME].strip()
-                if extension and file_type:
-                    file_type_dict[extension] = file_type
-    return file_type_dict
+    Methods:
+        get_unique_file_name: Generate a unique file name to avoid conflicts.
+        dict_to_csv: Save the extension dictionary to the CSV file.
+        csv_to_dict: Read the extension dictionary from the CSV file.
+        organize_folder: Organize files in the specified directory.
+    """
 
-def organize_folder():
-    path = Path(input("Digite o caminho do diretório: "))
+    def __init__(self):
+        self.file_type_dict, self.csv_error = self.csv_to_dict()
 
-    file_type_dict = csv_to_dict()
+    def get_unique_file_name(self, destination_folder: Path, original_name: Path) -> str:
+        """
+        Generate a unique file name to avoid conflicts in the destination folder.
 
-    try:
-        files = [file for file in path.iterdir() if file.is_file()]
-    except FileNotFoundError:
-        print("O Diretório fornecido não existe.")
-    except NotADirectoryError:
-        print("O Caminho especificado não leva a um diretório.")
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
-    else:
+        Args:
+            destination_folder (Path): The folder where the file will be moved.
+            original_name (Path): The original file name.
+
+        Returns:
+            str: A unique file name that doesn't exist in the destination folder.
+        """
+        stem = original_name.stem
+        suffix = original_name.suffix
+        new_name = original_name.name
+        counter = 1
+
+        while (destination_folder / new_name).exists():
+            new_name = f"{stem}({counter}){suffix}"
+            counter += 1
+        return new_name
+
+    def dict_to_csv(self) -> Optional[str]:
+        """
+        Save the extension dictionary to the CSV file.
+        
+        Returns:
+            Optional[str]: Error message if there's an error, None otherwise
+        """
+        try:
+            with open(DATA_PATH, "w", newline="", encoding="utf-8") as csv_file:
+                writer = csv.writer(csv_file)
+                writer.writerow([EXTENSION_FIELDNAME, FILE_TYPE_FIELDNAME])
+                writer.writerows(DEFAULT_EXTENSION_TO_TYPE.items())
+            return None
+        except PermissionError:
+            return "Permissão negada para escrever no arquivo CSV. O arquivo padrão será utilizado."
+        except Exception as e:
+            return f"Ocorreu um erro ao tentar escrever no arquivo CSV: {e}\nO arquivo padrão será utilizado."
+
+    def csv_to_dict(self) -> Tuple[Dict[str, str], Optional[str]]:
+        """
+        Read the extension dictionary from the CSV file.
+        
+        Returns:
+            Tuple[Dict[str, str], Optional[str]]: (dictionary of types, error message if any)
+        """
+        file_type_dict = {}
+        error_msg = None
+        
+        try:
+            with open(DATA_PATH, "r", newline="", encoding="utf-8") as csv_file:
+                reader = csv.DictReader(csv_file)
+                for row in reader:
+                    extension = row[EXTENSION_FIELDNAME].strip().lower()
+                    file_type = row[FILE_TYPE_FIELDNAME].strip()
+                    if extension and file_type:
+                        file_type_dict[extension] = file_type
+        except FileNotFoundError:
+            csv_error = self.dict_to_csv()
+            return DEFAULT_EXTENSION_TO_TYPE, csv_error
+        except:
+            error_msg = "Erro com o arquivo CSV. O arquivo será sobreescrito com os dados padrões."
+            csv_error = self.dict_to_csv()
+            if csv_error:
+                return DEFAULT_EXTENSION_TO_TYPE, csv_error
+            return DEFAULT_EXTENSION_TO_TYPE, error_msg
+                        
+        return file_type_dict, error_msg
+
+    def organize_folder(self, directory_path: str) -> Tuple[bool, List[str]]:
+        """
+        Organize files in the specified directory.
+        
+        Args:
+            directory_path (str): Path of the directory to be organized
+        
+        Returns:
+            Tuple[bool, List[str]]: (success of the operation, list of error messages)
+        """
+        path = Path(directory_path)
+        
+        try:
+            files = [file for file in path.iterdir() if file.is_file()]
+        except FileNotFoundError:
+            return False, ["O Diretório fornecido não existe"]
+        except NotADirectoryError:
+            return False, ["O Caminho especificado não leva a um diretório"]
+        except Exception as e:
+            return False, [f"Ocorreu um erro: {e}"]
+
+        success = True
+        errors = []
         for file in files:
             file_extension = file.suffix
-
-            file_type = file_type_dict.get(file_extension.lower(), "Outros")
+            file_type = self.file_type_dict.get(file_extension.lower(), "Outros")
             
             if file_type:
                 destination_folder = path / file_type
@@ -106,12 +163,52 @@ def organize_folder():
                 try:
                     file.rename(new_path)
                 except FileExistsError:
-                    unique_name = get_unique_file_name(destination_folder, file)
+                    unique_name = self.get_unique_file_name(destination_folder, file)
                     new_path = destination_folder / unique_name
                     file.rename(new_path)
                 except PermissionError:
-                    print(f"Sem permissão para mover o arquivo {file}.")
+                    errors.append(f"Sem permissão para mover o arquivo {file}")
+                    success = False
                 except Exception as e:
-                    print(f"Ocorreu um erro ao tentar mover o arquivo {file}: {e}")
+                    errors.append(f"Ocorreu um erro ao tentar mover o arquivo {file}: {e}")
+                    success = False
+        
+        return success, errors
 
-organize_folder()
+def main():
+    """Main function for execution via command line"""
+    organizer = FileOrganizer()
+    
+    if organizer.csv_error:
+        print(organizer.csv_error)
+    
+    while True:
+        try:
+            directory = input("Digite o caminho do diretório (ou 'q' para sair): ")
+            if directory.lower() == 'q':
+                print("Programa encerrado.")
+                break
+
+            print(f"Organizando arquivos em: {directory}")
+            success, errors = organizer.organize_folder(directory)
+            
+            if success:
+                print("\nOrganização concluída com sucesso!")
+            else:
+                print("\nOrganização concluída com alguns erros.\nErros encontrados:")
+                for error in errors:
+                    print(f"- {error}")
+            
+            retry = input("\nDeseja organizar outro diretório? (s/n): ")
+            if retry.lower() != 's':
+                print("Programa encerrado.")
+                break
+        except KeyboardInterrupt:
+            print("\nOperação cancelada pelo usuário.")
+            break
+        except Exception as e:
+            print(f"\nOcorreu um erro inesperado: {e}")
+            print("Tente novamente.")
+
+if __name__ == "__main__":
+    main()
