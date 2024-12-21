@@ -127,7 +127,7 @@ class FileOrganizer:
                         
         return file_type_dict, error_msg
 
-    def organize_folder(self, directory_path: str) -> Tuple[bool, List[str]]:
+    def organize_folder(self, directory_path: str) -> Tuple[bool, str | List[str]]:
         """
         Organize files in the specified directory.
         
@@ -135,18 +135,24 @@ class FileOrganizer:
             directory_path (str): Path of the directory to be organized
         
         Returns:
-            Tuple[bool, List[str]]: (success of the operation, list of error messages)
+        Tuple[bool, str | List[str]]: 
+            A tuple containing:
+                - A boolean indicating the success of the operation.
+                - A single error message or a list of error messages.
         """
         path = Path(directory_path)
+
+        if not path.is_absolute():
+            return False, "O Caminho fornecido não é absoluto."
         
         try:
             files = [file for file in path.iterdir() if file.is_file()]
         except FileNotFoundError:
-            return False, ["O Diretório fornecido não existe"]
+            return False, "O Diretório fornecido não existe"
         except NotADirectoryError:
-            return False, ["O Caminho especificado não leva a um diretório"]
+            return False, "O Caminho especificado não leva a um diretório"
         except Exception as e:
-            return False, [f"Ocorreu um erro: {e}"]
+            return False, f"Ocorreu um erro: {e}"
 
         success = True
         errors = []
@@ -168,10 +174,8 @@ class FileOrganizer:
                     file.rename(new_path)
                 except PermissionError:
                     errors.append(f"Sem permissão para mover o arquivo {file}")
-                    success = False
                 except Exception as e:
                     errors.append(f"Ocorreu um erro ao tentar mover o arquivo {file}: {e}")
-                    success = False
         
         return success, errors
 
@@ -193,11 +197,16 @@ def main():
             success, errors = organizer.organize_folder(directory)
             
             if success:
-                print("\nOrganização concluída com sucesso!")
+                if errors:
+                    print("\nOrganização concluída com alguns erros.\nErros encontrados:")
+                    for error in errors:
+                        print(f"- {error}")
+                else:
+                    print("\nOrganização concluída com sucesso!")
+
             else:
-                print("\nOrganização concluída com alguns erros.\nErros encontrados:")
-                for error in errors:
-                    print(f"- {error}")
+                print("\nA organização não pôde ser concluída.\nErro ocorrido:")
+                print(f"- {errors}")
             
             retry = input("\nDeseja organizar outro diretório? (s/n): ")
             if retry.lower() != 's':
