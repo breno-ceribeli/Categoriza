@@ -81,6 +81,9 @@ class FileOrganizer:
     def dict_to_csv(self) -> str | None:
         """
         Save the extension dictionary to the CSV file.
+
+        Args:
+            None
         
         Returns:
             str | None: Error message if there's an error, None otherwise
@@ -99,6 +102,9 @@ class FileOrganizer:
     def csv_to_dict(self) -> tuple[dict[str, str], str | None]:
         """
         Read the extension dictionary from the CSV file.
+
+        Args:
+            None
     
         Returns:
             tuple[dict[str, str], str | None]: A tuple containing:
