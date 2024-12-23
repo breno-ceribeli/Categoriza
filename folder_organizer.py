@@ -44,7 +44,7 @@ class FileOrganizer:
     3. Handle file naming conflicts by creating unique file names.
 
     Attributes:
-        file_type_dict (Dict[str, str]): A dictionary mapping file extensions to file types.
+        file_type_dict (dict[str, str]): A dictionary mapping file extensions to file types.
         csv_error (str | None): An error message if there was an issue with the CSV file.
 
     Methods:
@@ -81,9 +81,6 @@ class FileOrganizer:
     def dict_to_csv(self) -> str | None:
         """
         Save the extension dictionary to the CSV file.
-
-        Args:
-            None
         
         Returns:
             str | None: Error message if there's an error, None otherwise
@@ -102,9 +99,6 @@ class FileOrganizer:
     def csv_to_dict(self) -> tuple[dict[str, str], str | None]:
         """
         Read the extension dictionary from the CSV file.
-
-        Args:
-            None
     
         Returns:
             tuple[dict[str, str], str | None]: A tuple containing:
