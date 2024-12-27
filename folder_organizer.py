@@ -28,9 +28,11 @@ DEFAULT_EXTENSION_TO_TYPE = {
     ".exe": "Executavel", ".msi": "Executavel", ".bat": "Executavel",
     ".sh": "Executavel", ".app": "Executavel", ".jar": "Executavel",
     ".bin": "Executavel", ".cmd": "Executavel",
+
+    "others": "Outros"
 }
 
-DATA_PATH = Path("data.csv")
+DATA_PATH = Path(__file__).parent / "data.csv"
 EXTENSION_FIELDNAME = "Extensão do arquivo"
 FILE_TYPE_FIELDNAME = "Tipo de arquivo"
 
@@ -158,24 +160,26 @@ class FileOrganizer:
         errors = []
         for file in files:
             file_extension = file.suffix
-            file_type = self.file_type_dict.get(file_extension.lower(), "Outros")
+            file_type = self.file_type_dict.get(file_extension.lower())
             
-            if file_type:
-                destination_folder = path / file_type
-                destination_folder.mkdir(exist_ok=True)
+            if not file_type:
+                file_type = self.file_type_dict.get("others", "Others")
 
-                new_path = destination_folder / file.name
+            destination_folder = path / file_type
+            destination_folder.mkdir(exist_ok=True)
 
-                try:
-                    file.rename(new_path)
-                except FileExistsError:
-                    unique_name = self.get_unique_file_name(destination_folder, file)
-                    new_path = destination_folder / unique_name
-                    file.rename(new_path)
-                except PermissionError:
-                    errors.append(f"Sem permissão para mover o arquivo {file}")
-                except Exception as e:
-                    errors.append(f"Ocorreu um erro ao tentar mover o arquivo {file}: {e}")
+            new_path = destination_folder / file.name
+
+            try:
+                file.rename(new_path)
+            except FileExistsError:
+                unique_name = self.get_unique_file_name(destination_folder, file)
+                new_path = destination_folder / unique_name
+                file.rename(new_path)
+            except PermissionError:
+                errors.append(f"Sem permissão para mover o arquivo {file}")
+            except Exception as e:
+                errors.append(f"Ocorreu um erro ao tentar mover o arquivo {file}: {e}")
         
         return success, errors
 
