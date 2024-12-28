@@ -1,8 +1,10 @@
 import customtkinter as ctk
 from tkinter import filedialog
 from PIL import Image
+from pathlib import Path
 from folder_organizer import FileOrganizer
-from error_log_window import ErrorLog, LogWindow
+from error_log_window import *
+from app_config import SettingsFrame
 try:
     from ctypes import windll, byref, sizeof, c_int
 except:
@@ -17,11 +19,15 @@ TITLE_HEX_COLOR = 0x00312822
 APP_WIDTH = 500
 APP_HEIGHT = 500
 
-ICO_IMAGE = "images/empty.ico"
-FOLDER_ICON = "images/folder_icon.png"
-FOLDER_ICON_HOVER = "images/folder_icon_hover.png"
-ERROR_ICON = "images/error_icon.png"
-ERROR_ICON_HOVER = "images/error_icon_hover.png"
+ROOT_IMAGE_PATH = Path(__file__).parent / "images"
+ICO_IMAGE = ROOT_IMAGE_PATH / "empty.ico"
+WELCOME_IMAGE = ROOT_IMAGE_PATH / "welcome.png"
+FOLDER_ICON = ROOT_IMAGE_PATH / "folder_icon.png"
+FOLDER_ICON_HOVER = ROOT_IMAGE_PATH / "folder_icon_hover.png"
+ERROR_ICON = ROOT_IMAGE_PATH / "error_icon.png"
+ERROR_ICON_HOVER = ROOT_IMAGE_PATH / "error_icon_hover.png"
+RETURN_ICON = ROOT_IMAGE_PATH / "return_icon.png"
+RETURN_ICON_HOVER = ROOT_IMAGE_PATH / "return_icon_hover.png"
 
 
 class App(ctk.CTk):
@@ -34,11 +40,18 @@ class App(ctk.CTk):
     Attributes:
         entry_font (ctk.CTkFont): Font used for entry fields.
         buttons_font (str): Font used for buttons.
+        welcome_label (ctk.CTkLabel): Label to display the welcome (logo) image.
         folder_path (ctk.StringVar): StringVar to store the selected folder path.
+        path_frame (PathFrame): Frame containing path entry.
         error_log (ErrorLog): Instance of ErrorLog to manage error logging.
+        buttons_frame (ButtonsFrame): Frame containing the main buttons.
+        return_button (ctk.CTkLabel): Icon to return to the main interface.
+        settings_frame (SettingsFrame): Frame containing the settings interface.
 
     Methods:
         change_title_bar_color: Changes the title bar color for Windows 11.
+        place_main_interface: Places the main interface and removes the settings interface components.
+        place_settings_interface: Places the settings interface and removes the main interface components.
     """
     def __init__(self):
         """
@@ -59,17 +72,49 @@ class App(ctk.CTk):
         self.entry_font = ctk.CTkFont(family="Dubai", size=14)
         self.buttons_font = "Tahoma"
 
+        welcome_image = ctk.CTkImage(
+            light_image=Image.open(WELCOME_IMAGE),
+            dark_image=Image.open(WELCOME_IMAGE),
+            size=(400, 220)
+        )
+
+        self.welcome_label = ctk.CTkLabel(master=self, text="", image=welcome_image)
+        self.welcome_label.place(y=25, relx=0.5, anchor="n")
+
         self.folder_path = ctk.StringVar()
 
-        path_frame = PathFrame(self, self.entry_font, self.folder_path)
-        path_frame.place(relx=0.5, rely=0.52, anchor="center")
+        self.path_frame = PathFrame(self, self.entry_font, self.folder_path)
+        self.path_frame.place(relx=0.5, rely=0.52, anchor="center")
 
         self.error_log = ErrorLog()
 
-        buttons_frame = ButtonsFrame(self, self.buttons_font, self.folder_path, self.error_log)
-        buttons_frame.place(relx=0.5, rely=0.59, relheight=0.36, anchor="n")
+        self.buttons_frame = ButtonsFrame(self, self.buttons_font, self.folder_path, self.error_log)
+        self.buttons_frame.place(relx=0.5, rely=0.59, relheight=0.36, anchor="n")
 
         CornerButtons(self, self.error_log)
+
+        self.return_image = ctk.CTkImage(
+            light_image=Image.open(RETURN_ICON),
+            dark_image=Image.open(RETURN_ICON),
+            size=(16, 16)
+        )
+        
+        self.hover_return_image = ctk.CTkImage(
+            light_image=Image.open(RETURN_ICON_HOVER),
+            dark_image=Image.open(RETURN_ICON_HOVER),
+            size=(16, 16)
+        )
+
+        self.return_icon = ctk.CTkLabel(
+            master=self,
+            text="",
+            image=self.return_image,
+            cursor="hand2"
+        )
+        
+        self.return_icon.bind("<Button-1>", lambda e: self.place_main_interface())
+        self.return_icon.bind("<Enter>", lambda e: self.return_icon.configure(image=self.hover_return_image))
+        self.return_icon.bind("<Leave>", lambda e: self.return_icon.configure(image=self.return_image))
 
         self.mainloop()
     
@@ -87,6 +132,28 @@ class App(ctk.CTk):
             windll.dwmapi.DwmSetWindowAttribute(HWND, DWMWA_ATTRIBUTE, byref(c_int(COLOR)), sizeof(c_int))
         except:
             pass
+    
+    def place_main_interface(self) -> None:
+        """
+        Places the Main Interface and removes the Settings Frame.
+        """
+        self.path_frame.place(relx=0.5, rely=0.52, anchor="center")
+        self.buttons_frame.place(relx=0.5, rely=0.59, relheight=0.36, anchor="n")
+        self.welcome_label.place(y=25, relx=0.5, anchor="n")
+        self.return_icon.place_forget()
+        self.settings_frame.place_forget()
+        del self.settings_frame
+
+    def place_settings_interface(self) -> None:
+        """
+        Places the Settings Frame (Interface) and removes all Main Interface components.
+        """
+        self.path_frame.place_forget()
+        self.buttons_frame.place_forget()
+        self.welcome_label.place_forget()
+        self.return_icon.place(relx=0.02, rely=0.01, anchor="nw")
+        self.settings_frame = SettingsFrame(self)
+        self.settings_frame.place(relx=0.5, y=40, relwidth=0.99, relheight=0.91, anchor="n")
 
 
 class PathFrame(ctk.CTkFrame):
@@ -113,7 +180,7 @@ class PathFrame(ctk.CTkFrame):
         Initializes the PathFrame with the given parent, font, and folder path.
 
         Args:
-            parent (ctk.CTk): The parent widget.
+            parent (ctk.CTk): The parent window.
             font (ctk.CTkFont): The font to be used for the path entry.
             folder_path (ctk.StringVar): The StringVar to store the selected folder path.
         """
@@ -204,6 +271,7 @@ class ButtonsFrame(ctk.CTkFrame):
     application settings. It also manages notifications and error logging.
 
     Attributes:
+        parent (ctk.CTk): The parent window.
         folder_path (ctk.StringVar): StringVar containing the selected folder path.
         notification_manager (NotificationManager): Instance to manage notifications.
         error_log (ErrorLog): Instance to manage error logging.
@@ -222,7 +290,7 @@ class ButtonsFrame(ctk.CTkFrame):
         Initializes the ButtonsFrame with the given parent, font, folder path, and error log.
 
         Args:
-            parent (ctk.CTk): The parent widget.
+            parent (ctk.CTk): The parent window.
             font (str): The font to be used for the buttons.
             folder_path (ctk.StringVar): The StringVar containing the selected folder path.
             error_log (ErrorLog): The ErrorLog instance for managing error logs.
@@ -232,6 +300,7 @@ class ButtonsFrame(ctk.CTkFrame):
             fg_color=BACKGROUND_COLOR,
         )
 
+        self.parent = parent
         self.folder_path = folder_path
         self.notification_manager = NotificationManager(self.master)
         self.error_log = error_log
@@ -354,7 +423,7 @@ class ButtonsFrame(ctk.CTkFrame):
             )
     
     def app_config(self) -> None:
-        print("Abrindo configurações")
+        self.parent.place_config_interface()
     
     def on_hover(self, button: ctk.CTkButton) -> None:
         """
@@ -598,4 +667,4 @@ class CornerButtons:
 
 
 if __name__ == "__main__":
-    App()
+    app = App()
