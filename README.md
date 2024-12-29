@@ -45,7 +45,7 @@ A CLI é ideal para usuários que preferem comandos diretos para tarefas rápida
 
 ## English Documentation
 
-### Installation
+## Installation
 
 1. Ensure Python is installed (version 3.9 or higher).
 
@@ -64,9 +64,9 @@ A CLI é ideal para usuários que preferem comandos diretos para tarefas rápida
    pip install -r requirements.txt
    ```
 
-### Usage
+## Usage
 
-#### GUI
+### GUI
 
 1. Open the program by running the following command:
     ```bash
@@ -81,7 +81,7 @@ A CLI é ideal para usuários que preferem comandos diretos para tarefas rápida
 
 5. Check and manage error logs if any issues arise during the process.
 
-#### CLI
+### CLI
 
 You can use the command-line version of the application in two ways:
 
@@ -99,7 +99,7 @@ You can use the command-line version of the application in two ways:
     ```
 In both cases, the program will organize the files in the specified folder, sorting them into subfolders based on their types.
 
-### CSV Configuration
+## CSV Configuration
 
 The `data.csv` file is the core configuration file for defining how files are categorized. It consists of two columns:
 
@@ -110,7 +110,7 @@ The `data.csv` file is the core configuration file for defining how files are ca
 Additionally, there is a special entry:
 - `others`: Defines the name of the folder where files with extensions not explicitly listed will be placed.
 
-#### Editing the CSV
+### Editing the CSV
 
 - **GUI**: Use the graphical interface to easily add, modify, or remove entries in the `data.csv` file. This option is user-friendly and does not require direct interaction with the file.
 
@@ -137,11 +137,11 @@ In this example:
 
 - Any file extension not listed will go into the `Miscellaneous` folder.
 
-### Future Features
+## Future Features
 
 - Option to select the GUI language (Portuguese or English)
 
-### Contributing
+## Contributing
 
 Contributions are welcome! Follow these steps:
 1. Fork this repository.
@@ -156,7 +156,7 @@ Contributions are welcome! Follow these steps:
 
 5. Submit a pull request detailing your changes.
 
-### License and Dependencies
+## License and Dependencies
 
 This project is licensed under the [MIT License](LICENSE).
 
@@ -178,7 +178,7 @@ Make sure to respect the licenses of the dependencies when redistributing this s
 
 ## Documentação em Português
 
-### Instalação
+## Instalação
 
 1. Certifique-se de ter o Python instalado (versão 3.9 ou superior).
 
@@ -196,9 +196,9 @@ Make sure to respect the licenses of the dependencies when redistributing this s
    pip install -r requirements.txt
    ```
 
-### Como Usar
+## Como Usar
 
-#### GUI
+### GUI
 
 1. Abra o programa executando o seguinte comando:
     ```bash
@@ -213,7 +213,7 @@ Make sure to respect the licenses of the dependencies when redistributing this s
 
 5. Verifique e gerencie logs de erros caso ocorram problemas durante o processo.
 
-#### CLI
+### CLI
 
 Você pode usar a versão em linha de comando da aplicação de duas maneiras:
 
@@ -231,7 +231,7 @@ Você pode usar a versão em linha de comando da aplicação de duas maneiras:
     ```
 Em ambos os casos, o programa organizará os arquivos na pasta especificada, separando-os em subpastas de acordo com seus tipos.
 
-### Configuração do CSV
+## Configuração do CSV
 
 O arquivo `data.csv` é o principal arquivo de configuração para definir como os arquivos são categorizados. Ele consiste em duas colunas:
 
@@ -242,7 +242,7 @@ O arquivo `data.csv` é o principal arquivo de configuração para definir como 
 Além disso, há uma entrada especial:
 - `others`: Define o nome da pasta onde os arquivos com extensões não explicitamente listadas serão colocados.
 
-#### Editando o CSV
+### Editando o CSV
 
 - **GUI**: Use a interface gráfica para adicionar, modificar ou remover entradas no arquivo `data.csv`. Esta opção é intuitiva e não requer interação direta com o arquivo.
 
@@ -269,11 +269,11 @@ Nesse exemplo:
 
 - Qualquer extensão não listada irá para a pasta `Miscelânea`.
 
-### Funcionalidades Futuras
+## Funcionalidades Futuras
 
 - Opção para selecionar a linguagem da GUI (português ou inglês).
 
-### Contribuição
+## Contribuição
 
 Contribuições são bem-vindas! Siga os passos:
 1. Faça um fork deste repositório.
@@ -288,7 +288,7 @@ Contribuições são bem-vindas! Siga os passos:
 
 5. Submeta um pull request detalhando suas alterações.
 
-### Licença e Dependências
+## Licença e Dependências
 
 Este projeto está licenciado sob a [Licença MIT](LICENSE).
 
