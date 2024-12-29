@@ -34,8 +34,8 @@ DEFAULT_EXTENSION_TO_TYPE = {
 }
 
 DATA_PATH = Path(__file__).parent / "data.csv"
-EXTENSION_FIELDNAME = "Extensão do arquivo"
-FILE_TYPE_FIELDNAME = "Tipo de arquivo"
+EXTENSION_FIELDNAME = "File extension"
+FILE_TYPE_FIELDNAME = "File Type"
 
 class FileOrganizer:
     """
