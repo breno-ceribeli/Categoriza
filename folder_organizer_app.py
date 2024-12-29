@@ -423,7 +423,7 @@ class ButtonsFrame(ctk.CTkFrame):
             )
     
     def app_config(self) -> None:
-        self.parent.place_config_interface()
+        self.parent.place_settings_interface()
     
     def on_hover(self, button: ctk.CTkButton) -> None:
         """
