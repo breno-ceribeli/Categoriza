@@ -1,4 +1,5 @@
 from pathlib import Path
+from sys import argv
 import csv
 
 DEFAULT_EXTENSION_TO_TYPE = {
@@ -189,39 +190,30 @@ def main():
     
     if organizer.csv_error:
         print(organizer.csv_error)
-    
-    while True:
-        try:
-            directory = input("Digite o caminho do diretório (ou 'q' para sair): ")
-            if directory.lower() == 'q':
-                print("Programa encerrado.")
-                break
-
-            print(f"Organizando arquivos em: {directory}")
-            success, errors = organizer.organize_folder(directory)
-            
-            if success:
-                if errors:
-                    print("\nOrganização concluída com alguns erros.\nErros encontrados:")
-                    for error in errors:
-                        print(f"- {error}")
-                else:
-                    print("\nOrganização concluída com sucesso!")
-
+    if len(argv) > 1:
+        directory = argv[1]
+    else:
+        directory = input("Digite o caminho do diretório: ")
+    try:
+        success, errors = organizer.organize_folder(directory)
+        
+        if success:
+            if errors:
+                print("\nOrganização concluída com alguns erros.\nErros encontrados:")
+                for error in errors:
+                    print(f"- {error}")
             else:
-                print("\nA organização não pôde ser concluída.\nErro ocorrido:")
-                print(f"- {errors}")
-            
-            retry = input("\nDeseja organizar outro diretório? (s/n): ")
-            if retry.lower() != 's':
-                print("Programa encerrado.")
-                break
-        except KeyboardInterrupt:
-            print("\nOperação cancelada pelo usuário.")
-            break
-        except Exception as e:
-            print(f"\nOcorreu um erro inesperado: {e}")
-            print("Tente novamente.")
+                print("\nOrganização concluída com sucesso!")
+
+        else:
+            print("\nA organização não pôde ser concluída.\nErro ocorrido:")
+            print(f"- {errors}")
+        
+    except KeyboardInterrupt:
+        print("\nOperação cancelada pelo usuário.")
+        return
+    except Exception as e:
+        print(f"\nOcorreu um erro inesperado: {e}")
 
 if __name__ == "__main__":
     main()
