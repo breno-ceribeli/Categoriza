@@ -26,14 +26,14 @@ A CLI é ideal para usuários que preferem comandos diretos para tarefas rápida
 
 ## Table of Contents / Índice
 
-- [🇺🇸 English Documentation](#🇺🇸-english-documentation)
+- [🇺🇸 English Documentation](#english-documentation)
   - [Installation](#installation)
   - [Usage](#usage)
   - [CSV Configuration](#csv-configuration)
   - [Future Features](#future-features)
   - [Contributing](#contributing)
   - [License and Dependencies](#license-and-dependencies)
-- [🇧🇷 Documentação em Português](#🇧🇷-documentação-em-português)
+- [🇧🇷 Documentação em Português](#documentação-em-português)
   - [Instalação](#instalação)
   - [Como Usar](#como-usar)
   - [Configuração do CSV](configuração-do-csv)
@@ -43,7 +43,7 @@ A CLI é ideal para usuários que preferem comandos diretos para tarefas rápida
 
 ---
 
-## 🇺🇸 English Documentation
+## English Documentation
 
 ### Installation
 
@@ -176,7 +176,7 @@ Make sure to respect the licenses of the dependencies when redistributing this s
 
 ---
 
-## 🇧🇷 Documentação em Português
+## Documentação em Português
 
 ### Instalação
 
