@@ -51,7 +51,7 @@ A CLI é ideal para usuários que preferem comandos diretos para tarefas rápida
 
 2. Clone this repository:
    ```bash
-   git clone https://github.com/breno-ceribeli/Categoriza
+   git clone https://github.com/breno-ceribeli/Categoriza.git
    ```
 
 3. Navigate to the project directory:
@@ -184,7 +184,7 @@ Make sure to respect the licenses of the dependencies when redistributing this s
 
 2. Clone este repositório:
    ```bash
-   git clone https://github.com/seu-usuario/categoriza.git
+   git clone https://github.com/breno-ceribeli/Categoriza.git
    ```
 3. Navegue até o diretório do projeto:
    ```bash
