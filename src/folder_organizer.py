@@ -193,7 +193,11 @@ def main():
     if len(argv) > 1:
         directory = argv[1]
     else:
-        directory = input("Digite o caminho do diretório: ")
+        try:
+            directory = input("Digite o caminho do diretório: ")
+        except KeyboardInterrupt:
+            print("\nOperação cancelada pelo usuário.")
+            exit(0)
     try:
         success, errors = organizer.organize_folder(directory)
         
