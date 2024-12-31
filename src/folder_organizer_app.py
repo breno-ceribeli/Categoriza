@@ -19,7 +19,7 @@ TITLE_HEX_COLOR = 0x00312822
 APP_WIDTH = 500
 APP_HEIGHT = 500
 
-ROOT_IMAGE_PATH = Path(__file__).parent / "images"
+ROOT_IMAGE_PATH = Path(__file__).parent.parent / "images"
 ICO_IMAGE = ROOT_IMAGE_PATH / "empty.ico"
 WELCOME_IMAGE = ROOT_IMAGE_PATH / "welcome.png"
 FOLDER_ICON = ROOT_IMAGE_PATH / "folder_icon.png"

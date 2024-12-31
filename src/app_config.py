@@ -1,7 +1,7 @@
 import customtkinter as ctk
 from tkinter import messagebox
 from pathlib import Path
-from folder_organizer import FileOrganizer, DEFAULT_EXTENSION_TO_TYPE, EXTENSION_FIELDNAME, FILE_TYPE_FIELDNAME
+from folder_organizer import FileOrganizer, DEFAULT_EXTENSION_TO_TYPE, EXTENSION_FIELDNAME, FILE_TYPE_FIELDNAME, DATA_PATH
 import csv
 
 BACKGROUND_COLOR = "#222831"
@@ -12,7 +12,6 @@ SELECTED_ROW_COLOR = "#262A31"
 TEXT_COLOR = "#FFFFFF"
 BUTTONS_COLOR = "#1A1E25"
 
-DATA_PATH = Path(__file__).parent / "data.csv"
 
 class ScrollableTable(ctk.CTkFrame):
     """

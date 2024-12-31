@@ -33,7 +33,7 @@ DEFAULT_EXTENSION_TO_TYPE = {
     "others": "Outros"
 }
 
-DATA_PATH = Path(__file__).parent / "data.csv"
+DATA_PATH = Path(__file__).parent.parent / "data.csv"
 EXTENSION_FIELDNAME = "File extension"
 FILE_TYPE_FIELDNAME = "File Type"
 
