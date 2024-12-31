@@ -54,17 +54,19 @@ A CLI é ideal para usuários que preferem comandos diretos para tarefas rápida
    git clone https://github.com/breno-ceribeli/Categoriza.git
    ```
 
-3. Navigate to the project directory:
-   ```bash
-   cd Categoriza
-   ```
-
-4. Install the dependencies:
+3. Install the dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
 ## Usage
+
+- Ensure you are in the correct directory:
+   ```bash
+   cd Categoriza/src
+   ```
+
+The command may vary depending on your current directory or if you prefer to run the file directly without first navigating to the directory.
 
 ### GUI
 
@@ -186,17 +188,20 @@ Make sure to respect the licenses of the dependencies when redistributing this s
    ```bash
    git clone https://github.com/breno-ceribeli/Categoriza.git
    ```
-3. Navegue até o diretório do projeto:
-   ```bash
-   cd Categoriza
-   ```
 
-4. Instale as dependências:
+3. Instale as dependências:
    ```bash
    pip install -r requirements.txt
    ```
 
 ## Como Usar
+
+- Garanta que está no diretório correto:
+   ```bash
+   cd Categoriza/src
+   ```
+
+O comando pode variar dependendo de em que diretório você estiver no momento ou se preferir executar o arquivo diretamente sem antes entrar no diretório.
 
 ### GUI
 
